@@ -136,6 +136,7 @@ void cleanupCube() {
 }
 void updateCube(const glm::mat4& transform) {
 	objMat = transform;
+	//cast quad to mat para transformar de quaternion a matriz y hacer una translación (glm) con la posición
 }
 void drawCube() {
 	glEnable(GL_PRIMITIVE_RESTART);
