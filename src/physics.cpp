@@ -37,6 +37,7 @@ void GUI() {
 		ImGui::ShowTestWindow(&show_test_window);
 	}
 }
+
 Cubo *cubo;
 
 void PhysicsInit() {
@@ -47,10 +48,14 @@ void PhysicsInit() {
 		                          0, 0, 1, 0,
 		cubo->currentPos.x, cubo->currentPos.y, cubo->currentPos.z, 1);
 
+	//setup the initial torque
+	cubo->torque = cubo->forces;
+
 	Cube::updateCube(initPos);
 }
 void PhysicsUpdate(float dt) {
 
+	cubo->torque = glm::vec3(0);
 
 	Euler_Solver(cubo, dt);
 

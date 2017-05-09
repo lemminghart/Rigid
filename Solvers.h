@@ -6,9 +6,6 @@
 #define GRAVITY -9.81
 
 static void Euler_Solver(Cubo *cubo, float dt) {
-	//set the current position & speed as the last
-	/*cubo->lastPos = cubo->currentPos;
-	cubo->lastV = cubo->currentV;*/
 
 	//Calculate the Linear Momentum
 	// P = P. + dt * F.
@@ -24,9 +21,9 @@ static void Euler_Solver(Cubo *cubo, float dt) {
 
 	//Calculate the new velocity
 	// v = P / M
-	cubo->currentV.x = cubo->currentPos.x / cubo->M;
-	cubo->currentV.y = cubo->currentPos.y / cubo->M;
-	cubo->currentV.z = cubo->currentPos.z / cubo->M;
+	cubo->currentV.x = cubo->linearMom.x / cubo->M;
+	cubo->currentV.y = cubo->linearMom.y / cubo->M;
+	cubo->currentV.z = cubo->linearMom.z / cubo->M;
 
 	//Calculate the new Position
 	// x = x + dt * v
