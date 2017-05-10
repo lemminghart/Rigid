@@ -17,6 +17,8 @@ public:
 	glm::quat rotation;
 	glm::mat3 Ibody;
 	glm::mat3 InertiaInverse;
+
+	glm::mat4 lastMatrix;
 	float M; //mass = 1
 
 	bool loop; //for controlling the initialisation

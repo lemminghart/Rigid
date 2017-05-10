@@ -56,6 +56,8 @@ Cubo::Cubo() {
 	M = 1;
 
 	loop = false;
+
+	lastMatrix = glm::mat4(1.f);
 }
 
 Cubo::~Cubo() {

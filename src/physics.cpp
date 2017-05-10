@@ -6,6 +6,7 @@
 
 #include "../Cubo.h"
 #include "../Solvers.h"
+#include "../Collision.h"
 
 extern GLuint compileShader(const char* shaderStr, GLenum shaderType, const char* name = "");
 extern void linkProgram(GLuint program);
@@ -27,6 +28,17 @@ namespace Utils { //Namespace para manejar variables propias del sistema
 	int time = 0;
 	extern float percent = 0.f;
 	extern float percent_2 = 0.f;
+	float halfW = 0.5f;
+	glm::vec3 verts[] = {
+		glm::vec3(-halfW, -halfW, -halfW),
+		glm::vec3(-halfW, -halfW,  halfW),
+		glm::vec3(halfW, -halfW,  halfW),
+		glm::vec3(halfW, -halfW, -halfW),
+		glm::vec3(-halfW,  halfW, -halfW),
+		glm::vec3(-halfW,  halfW,  halfW),
+		glm::vec3(halfW,  halfW,  halfW),
+		glm::vec3(halfW,  halfW, -halfW)
+	};
 }
 
 
@@ -75,7 +87,6 @@ void PhysicsUpdate(float dt) {
 		cubo->forces = glm::vec3(0);		
 	}
 	cubo->loop = true;
-
 	Euler_Solver(cubo, dt);
 
 	//translacion  * rotacion
@@ -86,8 +97,18 @@ void PhysicsUpdate(float dt) {
 
 	glm::mat4 rotation = glm::mat4_cast(cubo->rotation);
 
+	glm::mat4 result = translation*rotation;
 
-	Cube::updateCube((translation*rotation));
+	
+	//update del cubo
+	Cube::updateCube((result));
+	for (int i = 0; i < 8; i++) {
+		//comprobamos colisiones tras el update
+		std::cout << i << std::endl;
+		Collision_Manager(cubo, result, Utils::verts[i]);
+	}
+	//actualizamos la matriz de transformacion
+	cubo->lastMatrix = result;
 
 	//aqui entra cada 1 segundos
 	if (Utils::percent > 0.33f) {
