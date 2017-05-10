@@ -2,6 +2,7 @@
 #include <imgui\imgui_impl_glfw_gl3.h>
 #include <GL\glew.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
 #include "../Cubo.h"
 #include "../Solvers.h"
@@ -21,6 +22,12 @@ namespace Cube {
 	extern void drawCube();
 }
 
+namespace Utils { //Namespace para manejar variables propias del sistema
+	 //time
+	int time = 0;
+	extern float percent = 0.f;
+	extern float percent_2 = 0.f;
+}
 
 
 bool show_test_window = false;
@@ -48,14 +55,26 @@ void PhysicsInit() {
 		                          0, 0, 1, 0,
 		cubo->currentPos.x, cubo->currentPos.y, cubo->currentPos.z, 1);
 
+	cubo->forces.y = 189.f * 2.f;
+	cubo->forces.x = 0.f;
+	cubo->forces.z = 0;
+
+	glm::vec3 randomPoint = glm::vec3(((float)rand()/RAND_MAX - 0.5f), ((float)rand() / RAND_MAX - 0.5f), ((float)rand() / RAND_MAX - 0.5f));
+
+	randomPoint = randomPoint + cubo->currentPos;
+
 	//setup the initial torque
-	cubo->torque = cubo->forces;
+	cubo->torque = glm::cross((randomPoint - cubo->currentPos), cubo->forces);
 
 	Cube::updateCube(initPos);
 }
 void PhysicsUpdate(float dt) {
 
-	cubo->torque = glm::vec3(0);
+	if (cubo->loop == true) {
+		cubo->torque = glm::vec3(0);
+		cubo->forces = glm::vec3(0);		
+	}
+	cubo->loop = true;
 
 	Euler_Solver(cubo, dt);
 
@@ -69,6 +88,28 @@ void PhysicsUpdate(float dt) {
 
 
 	Cube::updateCube((translation*rotation));
+
+	//aqui entra cada 1 segundos
+	if (Utils::percent > 0.33f) {
+		Utils::time++;
+		std::cout << "TIME:" << Utils::time << std::endl;
+		//aqui entra cada 5 segundos
+		if (Utils::percent_2 > 0.33f * 20.f) {
+			std::cout << "RESTART SIM" << std::endl;
+			delete cubo;
+			PhysicsInit();
+
+			//bajamos el contador a 0 para que a los 5 segundos vuelva a entrar aqui
+			Utils::percent_2 = 0;
+		}
+
+		//bajamos el contador a 0 para que al segundo vuelva a entrar aqui
+		Utils::percent = 0;
+		
+	}
+
+	Utils::percent += dt; //contador incremental
+	Utils::percent_2 += dt; //contador incremental
 
 }
 void PhysicsCleanup() {

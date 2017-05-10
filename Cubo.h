@@ -15,9 +15,11 @@ public:
 	glm::vec3 linearMom; //Stores the Linear Momentum
 	glm::vec3 torque;
 	glm::quat rotation;
-	glm::mat4 Ibody;
-	glm::mat4 InertiaInverse;
+	glm::mat3 Ibody;
+	glm::mat3 InertiaInverse;
 	float M; //mass = 1
+
+	bool loop; //for controlling the initialisation
 
 	Cubo();
 	~Cubo();

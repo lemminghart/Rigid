@@ -140,6 +140,7 @@ xcopy "$(ProjectDir)libs\glfw3.dll" "$(OutDir)" /y /d</Command>
     <ClCompile Include="src\render_prims.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Cubo.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Solvers.h" />

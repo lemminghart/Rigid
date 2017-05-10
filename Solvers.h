@@ -3,7 +3,8 @@
 #include <cmath>
 #include <glm/gtx/quaternion.hpp>
 
-#define GRAVITY -9.81
+#define GRAVITY -9.81f
+#define SLOW_GRAVITY -9.81f / 2.f
 
 static void Euler_Solver(Cubo *cubo, float dt) {
 
@@ -33,12 +34,12 @@ static void Euler_Solver(Cubo *cubo, float dt) {
 	cubo->currentPos.z = cubo->currentPos.z + (dt * cubo->currentV.z);
 
 	//Calculate the inverse of Inertia Tensor
-	glm::mat4 R = glm::mat4_cast(cubo->rotation);
+	glm::mat3 R = glm::mat3_cast(cubo->rotation);
 	cubo->InertiaInverse = R * glm::inverse(cubo->Ibody) * glm::transpose(R);
 	
 	//Calculate angular velocity
 	// w = I^-1 * L
-	cubo->angularV = cubo->InertiaInverse * glm::vec4(cubo->angularMom,0); //si da problemas pasar InertiaInverse a mat3
+	cubo->angularV = glm::inverse(cubo->InertiaInverse) * glm::vec4(cubo->angularMom,0); //si da problemas pasar InertiaInverse a mat3
 
 	//Calculate rotation
 	cubo->rotation = cubo->rotation + dt * 0.5f * glm::quat(0,cubo->angularV)*cubo->rotation;
