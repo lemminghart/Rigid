@@ -104,7 +104,7 @@ void PhysicsUpdate(float dt) {
 	Cube::updateCube((result));
 	for (int i = 0; i < 8; i++) {
 		//comprobamos colisiones tras el update
-		std::cout << i << std::endl;
+		/*std::cout << i << std::endl;*/
 		Collision_Manager(cubo, result, Utils::verts[i]);
 	}
 	//actualizamos la matriz de transformacion

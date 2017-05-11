@@ -72,13 +72,10 @@ static bool Check_Plane_Collision(glm::vec3 n, Particle *part, float d) {
 
 static glm::vec3 Calculate_position(glm::vec4 pos4, glm::mat4 matrix) {
 	
-	pos4 = pos4 * matrix;
+	pos4 = matrix * pos4;
 
 	//recupero el vec3 dividiendo todas las componenetes por W
-	pos4.x = pos4.x / pos4.w;
-	pos4.y = pos4.y / pos4.w;
-	pos4.z = pos4.z / pos4.w;
-	pos4.w = pos4.w / pos4.w;
+	
 	return glm::vec3(pos4.x, pos4.y, pos4.z);
 }
 
