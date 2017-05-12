@@ -6,7 +6,7 @@ Cubo::Cubo() {
 	
 	//setup the initial parameters (position)
 	currentPos.x = 0.f;
-	currentPos.y = 1.f;
+	currentPos.y = 3.f;
 	currentPos.z = 0.f;
 
 	//setup the initial speed

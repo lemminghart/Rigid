@@ -67,9 +67,9 @@ void PhysicsInit() {
 		                          0, 0, 1, 0,
 		cubo->currentPos.x, cubo->currentPos.y, cubo->currentPos.z, 1);
 
-	cubo->forces.y = 189.f * 2.f;
-	cubo->forces.x = 0.f;
-	cubo->forces.z = 0;
+	cubo->forces.x = ((float)rand() / RAND_MAX * 600.f - 300.f);
+	cubo->forces.y = ((float)rand() / RAND_MAX * 200.f + 200.f);
+	cubo->forces.z = ((float)rand() / RAND_MAX * 600.f - 300.f);
 
 	glm::vec3 randomPoint = glm::vec3(((float)rand()/RAND_MAX - 0.5f), ((float)rand() / RAND_MAX - 0.5f), ((float)rand() / RAND_MAX - 0.5f));
 
@@ -79,6 +79,9 @@ void PhysicsInit() {
 	cubo->torque = glm::cross((randomPoint - cubo->currentPos), cubo->forces);
 
 	Cube::updateCube(initPos);
+
+	cubo->lastMatrix = initPos;
+
 }
 void PhysicsUpdate(float dt) {
 
@@ -102,11 +105,18 @@ void PhysicsUpdate(float dt) {
 	
 	//update del cubo
 	Cube::updateCube((result));
+
+
+
 	for (int i = 0; i < 8; i++) {
 		//comprobamos colisiones tras el update
 		/*std::cout << i << std::endl;*/
-		Collision_Manager(cubo, result, Utils::verts[i]);
+		bool stop = Collision_Manager(cubo, result, Utils::verts[i]);
+		if (stop) {
+			break;
+		}
 	}
+	
 	//actualizamos la matriz de transformacion
 	cubo->lastMatrix = result;
 
@@ -114,13 +124,13 @@ void PhysicsUpdate(float dt) {
 	if (Utils::percent > 0.33f) {
 		Utils::time++;
 		std::cout << "TIME:" << Utils::time << std::endl;
-		//aqui entra cada 5 segundos
+		//aqui entra cada 20 segundos
 		if (Utils::percent_2 > 0.33f * 20.f) {
 			std::cout << "RESTART SIM" << std::endl;
 			delete cubo;
 			PhysicsInit();
 
-			//bajamos el contador a 0 para que a los 5 segundos vuelva a entrar aqui
+			//bajamos el contador a 0 para que a los 20 segundos vuelva a entrar aqui
 			Utils::percent_2 = 0;
 		}
 

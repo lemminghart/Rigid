@@ -16,9 +16,9 @@ static void Euler_Solver(Cubo *cubo, float dt) {
 
 	//Calculate the Angular Momentum
 	// L = L + dt * T(torque) [torque = Inertia Tensor * W (angular velocity)
-	cubo->angularMom.x = cubo->torque.x;
-	cubo->angularMom.y = cubo->torque.y;
-	cubo->angularMom.z = cubo->torque.z; //en el momento inicial creo una fuerza de la cual calculo el torque (diapo del gato). Luego no se usa mas
+	cubo->angularMom.x = cubo->angularMom.x + dt *cubo->torque.x;
+	cubo->angularMom.y = cubo->angularMom.y + dt *cubo->torque.y;
+	cubo->angularMom.z = cubo->angularMom.z + dt *cubo->torque.z; //en el momento inicial creo una fuerza de la cual calculo el torque (diapo del gato). Luego no se usa mas
 
 	//Calculate the new velocity
 	// v = P / M

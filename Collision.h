@@ -83,9 +83,12 @@ static glm::vec3 Calculate_position(glm::vec4 pos4, glm::mat4 matrix) {
 static void Calculate_Plane_Collision(Cubo *cubo, glm::vec3 normal, glm::vec3 vert) {
 
 	float E = 0.8f;
-	glm::vec3 Vrel = normal * cubo->currentV;
+	//glm::vec3 Vrel = normal * cubo->currentV;
+	float Vrel = glm::dot(normal, cubo->currentV);
 
 	glm::vec3 j = (-(1 + E)*Vrel) / (1.f + normal * glm::cross((cubo->Ibody * glm::cross(vert, normal)), vert));
+	//float j  = (-(1 + E)*Vrel) / glm::dot((1.f + normal), glm::cross((cubo->Ibody * glm::cross(vert, normal)), vert));
+
 
 	glm::vec3 BigJ = j * normal;
 
@@ -96,7 +99,7 @@ static void Calculate_Plane_Collision(Cubo *cubo, glm::vec3 normal, glm::vec3 ve
 
 
 //Calcula la colision con la caja contenedora
-static void Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
+static bool Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 	glm::vec3 n;
 	glm::vec3 p;
 
@@ -121,15 +124,20 @@ static void Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 			n = { 0.f,1.f,0.f };
 			p = { -5.f,0.f,-5.f };
 			if (Check_Plane_Collision(n, part, Calculate_d(n, p))) {
-				std::cout << "COLLISION: BOTTOM" <<std::endl;
+				std::cout << "COLLISION: BOTTOM" <<std::endl;				
 				Calculate_Plane_Collision(cubo, n, vert);
+				delete part;
+				return true;
 			}
+
 			//Collision with plane_left
 			n = { 1.f,0.f,0.f };
 			p = { -5.f,0.f,-5.f };
 			if (Check_Plane_Collision(n, part, Calculate_d(n, p))) {
 				std::cout << "COLLISION: LEFT" << std::endl;
 				Calculate_Plane_Collision(cubo, n, vert);
+				delete part;
+				return true;
 			}
 
 			//Collision with plane_back
@@ -138,6 +146,8 @@ static void Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 			if (Check_Plane_Collision(n, part, Calculate_d(n, p))) {
 				std::cout << "COLLISION: BACK" << std::endl;
 				Calculate_Plane_Collision(cubo, n, vert);
+				delete part;
+				return true;
 			}
 
 			//Collision with plane_front
@@ -146,6 +156,8 @@ static void Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 			if (Check_Plane_Collision(n, part, Calculate_d(n, p))) {
 				std::cout << "COLLISION: FRONT" << std::endl;
 				Calculate_Plane_Collision(cubo, n, vert);
+				delete part;
+				return true;
 			}
 
 			//Collision with plane_right
@@ -154,6 +166,8 @@ static void Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 			if (Check_Plane_Collision(n, part, Calculate_d(n, p))) {
 				std::cout << "COLLISION: RIGHT" << std::endl;
 				Calculate_Plane_Collision(cubo, n, vert);
+				delete part;
+				return true;
 			}
 
 			//Collision with plane_top
@@ -162,13 +176,23 @@ static void Box_Collision(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 			if (Check_Plane_Collision(n, part, Calculate_d(n, p))) {
 				std::cout << "COLLISION: TOP" << std::endl;
 				Calculate_Plane_Collision(cubo, n, vert);
+				delete part;
+				return true;
 			}
 		
+			delete part;
+			return false;
 }
 
 //Calcula TODAS las colisiones del programa
-static void Collision_Manager(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
+static bool Collision_Manager(Cubo *cubo, glm::mat4 matrix, glm::vec3 vert) {
 
 	//Check collision with BOX
-	Box_Collision(cubo, matrix, vert);
+	bool result = Box_Collision(cubo, matrix, vert);
+	if (result) {
+		return true;
+	}
+	else { 
+		return false; 
+	}
 }
