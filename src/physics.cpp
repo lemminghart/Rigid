@@ -106,8 +106,6 @@ void PhysicsUpdate(float dt) {
 	//update del cubo
 	Cube::updateCube((result));
 
-
-
 	for (int i = 0; i < 8; i++) {
 		//comprobamos colisiones tras el update
 		/*std::cout << i << std::endl;*/
