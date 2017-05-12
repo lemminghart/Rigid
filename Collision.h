@@ -85,7 +85,7 @@ static void Calculate_Plane_Collision(Cubo *cubo, glm::vec3 normal, glm::vec3 ve
 	float Vrel = glm::dot(normal, cubo->currentV);
 
 	//glm::vec3 j = (-(1 + E)*Vrel) / (1.f + normal * glm::cross((cubo->Ibody * glm::cross(vert, normal)), vert));
-	float j  = (-(1 + E)*Vrel) / (glm::dot((cubo->M + normal), glm::cross((cubo->Ibody * glm::cross(vert, normal)), vert)));
+	float j  = (-(1 + E)*Vrel) / (glm::dot((cubo->M + normal), glm::cross((glm::inverse(cubo->InertiaInverse) * glm::cross(vert, normal)), vert)));
 
 
 	glm::vec3 BigJ = j * normal;
